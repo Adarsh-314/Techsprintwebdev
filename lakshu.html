@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Infrastructure</title>
+    <meta name="description" content="Pocket Infrastructure — report road accidents, damaged roads, and civic issues in India. Anonymous photo uploads reach authorities for faster action.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="https://example.com/lakshu.html">
+    <meta name="theme-color" content="#0a1f4d">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:title" content="Pocket Infrastructure">
+    <meta property="og:description" content="Report road accidents, damaged roads, and civic issues. Anonymous uploads for faster response.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/lakshu.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+
+    <link rel="manifest" href="/manifest.json">    <meta name="firebase-project-id" content="your-firebase-project-id">    <link rel="stylesheet" href="laksh.css">
+    <link rel="stylesheet" href="reports.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://example.com/",
+      "name": "Pocket Infrastructure",
+      "description": "Citizen-driven platform to report infrastructure issues in India."
+    }
+    </script>
+</head>
+<body>
+
+<!-- Google Analytics (replace MEASUREMENT_ID with your GA4 id) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+  gtag('config', 'MEASUREMENT_ID');
+</script>
+
+    <nav class="navbar">
+        <div class="menu-icon">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <div class="nav-brand">
+            <img src="logo-small.png" alt="Logo" class="nav-logo-img">
+            <div class="nav-text">
+                <h1>POCKET INFRASTRUCTURE</h1>
+                <span>Your future is in your hand</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="#">Login</a>
+            <a href="#">Sign up</a>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <div class="content-card">
+            
+            <div class="card-logo-container">
+                <img src="shield-logo.png" alt="Pocket Infrastructure Badge">
+            </div>
+
+            <div class="card-text">
+                <h2>POCKET INFRASTRUCTURE</h2>
+                <h3 class="subtitle">Your future is in your hand</h3>
+                <p>
+                    Pocket Infrastructure is a citizen-driven digital platform
+                    that enables people to report road accidents, crimes,
+                    damaged roads, and infrastructure issues by uploading
+                    photos. These reports are securely forwarded to
+                    central authorities, promoting transparency, faster
+                    response, and safer, smarter public infrastructure for
+                    everyone.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <section id="reports-section" class="reports-section">
+        <div class="reports-header">
+            <h2>Recent Reports</h2>
+            <label class="filter">
+                <input id="filter-ut" type="checkbox">
+                Show only Union Territories (uploaded within last 3 months)
+            </label>
+        </div>
+
+        <div class="upload-card">
+            <h3>Report an issue (Anonymous)</h3>
+            <div id="backend-status" class="backend-status">Checking backend...</div>
+            <form id="upload-form">
+                <label class="visually-hidden" for="title">Title</label>
+                <div class="preview-wrap" aria-hidden="true">
+                    <img id="image-preview" class="preview-image" src="" alt="" style="display:none;">
+                </div>
+                <input id="title" type="text" name="title" placeholder="Title" required aria-label="Title">
+
+                <label class="visually-hidden" for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Describe the issue" required aria-label="Description"></textarea>
+
+                <label class="visually-hidden" for="region">Region</label>
+                <select id="region" name="region" required aria-label="Region">
+                    <option value="">Select region</option>
+                    <option value="Union Territory">Union Territory</option>
+                    <option value="State">State</option>
+                </select>
+
+                <label class="visually-hidden" for="image">Image</label>
+                <input id="image" type="file" name="image" accept="image/*" required aria-label="Image">
+
+                <button type="submit">Upload Report</button>
+                <div id="upload-status" class="upload-status" role="status" aria-live="polite"></div>
+            </form>
+        </div>
+
+        <div id="reports-list" class="reports-list">
+            <!-- Sample reports (data-region and data-date are used by script) -->
+            <article class="report" data-region="Union Territory" data-date="2025-12-15">
+                <h3>Road Damage near Lakshadweep</h3>
+                <p>Reported from Lakshadweep. Photo attached.</p>
+                <div class="meta">
+                    <span class="date">2025-12-15</span>
+                    <span class="region">Union Territory</span>
+                    <span class="tag-placeholder"></span>
+                </div>
+            </article>
+
+            <article class="report" data-region="Union Territory" data-date="2025-11-10">
+                <h3>Streetlight outage — Chandigarh</h3>
+                <p>Multiple streetlights are off near sector 22.</p>
+                <div class="meta">
+                    <span class="date">2025-11-10</span>
+                    <span class="region">Union Territory</span>
+                    <span class="tag-placeholder"></span>
+                </div>
+            </article>
+
+            <article class="report" data-region="State" data-date="2025-09-01">
+                <h3>Potholes on NH-44</h3>
+                <p>Multiple deep potholes causing traffic disruptions.</p>
+                <div class="meta">
+                    <span class="date">2025-09-01</span>
+                    <span class="region">State</span>
+                    <span class="tag-placeholder"></span>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

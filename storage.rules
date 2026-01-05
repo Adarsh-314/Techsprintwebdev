@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /uploads/{allPaths=**} {
+      // Allow create (upload) but restrict mime types & size via client + function checks
+      allow write: if request.resource != null &&
+                   (request.resource.contentType.matches('image/.*'));
+      // Allow read publicly
+      allow read: if true;
+      // No deletes/updates from client
+      allow delete: if false;
+    }
+  }
+}

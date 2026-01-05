@@ -1,0 +1,8 @@
+{
+  "name": "pocket-infrastructure-site",
+  "version": "0.1.0",
+  "scripts": {
+    "build:public": "node ./scripts/copy-to-public.js",
+    "start:emulator": "firebase emulators:start --only functions,firestore,storage,hosting"
+  }
+}
