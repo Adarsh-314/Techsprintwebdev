@@ -23,8 +23,8 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.3.7",
-    "mocha": "^10.2.0",
     "eslint": "^8.35.0",
+    "mocha": "^11.7.5",
     "prettier": "^2.8.4"
   },
   "engines": {
