@@ -1,14 +1,56 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /uploads/{allPaths=**} {
-      // Allow create (upload) but restrict mime types & size via client + function checks
-      allow write: if request.resource != null &&
-                   (request.resource.contentType.matches('image/.*'));
-      // Allow read publicly
+    // Public read access for all files
+    match /{allPaths=**} {
       allow read: if true;
-      // No deletes/updates from client
-      allow delete: if false;
     }
+
+    // Reports images - controlled upload
+    match /reports/{userId}/{reportId}/{fileName} {
+      allow write: if validateImageUpload() &&
+                   request.auth != null &&
+                   request.auth.uid == userId;
+      allow delete: if request.auth != null &&
+                   request.auth.uid == userId;
+    }
+
+    // Anonymous reports images
+    match /reports/anonymous/{reportId}/{fileName} {
+      allow write: if validateImageUpload() &&
+                   rateLimitCheck();
+      allow delete: if false; // No client deletes for anonymous uploads
+    }
+
+    // Admin uploads
+    match /admin/{allPaths=**} {
+      allow read, write, delete: if isAdmin();
+    }
+
+    // Temporary uploads (for processing)
+    match /temp/{allPaths=**} {
+      allow write: if validateImageUpload() &&
+                   request.auth != null;
+      allow read: if request.auth != null &&
+                  request.auth.uid == resource.metadata.uploaderId;
+      allow delete: if request.auth != null &&
+                   request.auth.uid == resource.metadata.uploaderId;
+    }
+  }
+
+  // Helper functions
+  function validateImageUpload() {
+    return request.resource.contentType.matches('image/(jpeg|jpg|png|webp|gif)') &&
+           request.resource.size < 10 * 1024 * 1024 && // 10MB max
+           request.resource.size > 1024; // 1KB min
+  }
+
+  function rateLimitCheck() {
+    // Allow max 5 uploads per hour for anonymous users
+    return get(/databases/default/documents/rate_limits/anonymous_$(request.auth != null ? request.auth.uid : 'ip_' + request.auth.token.email)).data.uploadsPerHour <= 5;
+  }
+
+  function isAdmin() {
+    return request.auth != null && request.auth.token.admin == true;
   }
 }

@@ -19,6 +19,7 @@
     <meta name="twitter:card" content="summary">
 
     <link rel="manifest" href="/manifest.json">    <meta name="firebase-project-id" content="your-firebase-project-id">    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,10 +41,10 @@
 </script>
 
     <nav class="navbar">
-        <div class="menu-icon">
+        <div class="menu-icon" id="menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
-        
+
         <div class="nav-brand">
             <img src="logo-small.png" alt="Logo" class="nav-logo-img">
             <div class="nav-text">
@@ -53,10 +54,31 @@
         </div>
 
         <div class="nav-links">
-            <a href="#">Login</a>
-            <a href="#">Sign up</a>
+            <a href="#" id="login-btn">Login</a>
+            <a href="#" id="signup-btn">Sign up</a>
         </div>
     </nav>
+
+    <!-- Hamburger Menu Overlay -->
+    <div class="hamburger-menu" id="hamburger-menu">
+        <div class="menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu" id="close-menu">&times;</button>
+        </div>
+        <ul class="menu-items">
+            <li><a href="#" class="menu-link" data-action="home"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" class="menu-link" data-action="report"><i class="fas fa-exclamation-triangle"></i> Report Issue</a></li>
+            <li><a href="#" class="menu-link" data-action="reports"><i class="fas fa-list"></i> Upload Report</a></li>
+            <li><a href="#" class="menu-link" data-action="news"><i class="fas fa-newspaper"></i> News & Updates</a></li>
+            <li><a href="#" class="menu-link" data-action="login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="#" class="menu-link" data-action="signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li><a href="#" class="menu-link" data-action="contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+            <li><a href="#" class="menu-link" data-action="about"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="#" class="menu-link" data-action="help"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            <li><a href="#" class="menu-link" data-action="privacy"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+            <li><a href="#" class="menu-link" data-action="terms"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+        </ul>
+    </div>
 
     <main class="hero-section">
         <div class="content-card">
@@ -83,7 +105,7 @@
 
     <section id="reports-section" class="reports-section">
         <div class="reports-header">
-            <h2>Recent Reports</h2>
+            <h2>Upload a Report</h2>
             <label class="filter">
                 <input id="filter-ut" type="checkbox">
                 Show only Union Territories (uploaded within last 3 months)
@@ -119,42 +141,359 @@
         </div>
 
         <div id="reports-list" class="reports-list">
-            <!-- Sample reports (data-region and data-date are used by script) -->
-            <article class="report" data-region="Union Territory" data-date="2025-12-15">
-                <h3>Road Damage near Lakshadweep</h3>
-                <p>Reported from Lakshadweep. Photo attached.</p>
-                <div class="meta">
-                    <span class="date">2025-12-15</span>
-                    <span class="region">Union Territory</span>
-                    <span class="tag-placeholder"></span>
-                </div>
-            </article>
-
-            <article class="report" data-region="Union Territory" data-date="2025-11-10">
-                <h3>Streetlight outage — Chandigarh</h3>
-                <p>Multiple streetlights are off near sector 22.</p>
-                <div class="meta">
-                    <span class="date">2025-11-10</span>
-                    <span class="region">Union Territory</span>
-                    <span class="tag-placeholder"></span>
-                </div>
-            </article>
-
-            <article class="report" data-region="State" data-date="2025-09-01">
-                <h3>Potholes on NH-44</h3>
-                <p>Multiple deep potholes causing traffic disruptions.</p>
-                <div class="meta">
-                    <span class="date">2025-09-01</span>
-                    <span class="region">State</span>
-                    <span class="tag-placeholder"></span>
-                </div>
-            </article>
-
+            <!-- Reports will be loaded here dynamically -->
         </div>
     </section>
 
     <script src="script.js"></script>
     <script src="animations.js"></script>
+    <script src="menu.js"></script>
+
+    <!-- Modal Popups -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to Pocket Infrastructure</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="modal-btn">Login</button>
+                </form>
+                <div class="modal-footer">
+                    <p>Don't have an account? <a href="#" id="switch-to-signup">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Join Pocket Infrastructure</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-phone">Phone Number</label>
+                        <input type="tel" id="signup-phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm-password">Confirm Password</label>
+                        <input type="password" id="signup-confirm-password" name="confirmPassword" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="terms" required> I agree to the <a href="#" id="terms-link">Terms of Service</a>
+                        </label>
+                    </div>
+                    <button type="submit" class="modal-btn">Create Account</button>
+                </form>
+                <div class="modal-footer">
+                    <p>Already have an account? <a href="#" id="switch-to-login">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Us Modal -->
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Contact Us</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>support@pocketinfrastructure.in</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+91 1800-XXX-XXXX</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>New Delhi, India</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name">Your Name</label>
+                        <input type="text" id="contact-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email">Email Address</label>
+                        <input type="email" id="contact-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-subject">Subject</label>
+                        <input type="text" id="contact-subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="modal-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Modal -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>About Pocket Infrastructure</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="about-content">
+                    <div class="about-section">
+                        <h3>Our Mission</h3>
+                        <p>To create a transparent and efficient system for reporting and resolving infrastructure issues across India, empowering citizens to contribute to better public services.</p>
+                    </div>
+                    <div class="about-section">
+                        <h3>What We Do</h3>
+                        <ul>
+                            <li>Provide a secure platform for anonymous reporting of infrastructure issues</li>
+                            <li>Connect citizens directly with relevant authorities</li>
+                            <li>Track and monitor the resolution of reported issues</li>
+                            <li>Promote accountability and transparency in public infrastructure management</li>
+                        </ul>
+                    </div>
+                    <div class="about-section">
+                        <h3>Our Impact</h3>
+                        <div class="stats">
+                            <div class="stat">
+                                <h4>10,000+</h4>
+                                <p>Reports Submitted</p>
+                            </div>
+                            <div class="stat">
+                                <h4>500+</h4>
+                                <p>Issues Resolved</p>
+                            </div>
+                            <div class="stat">
+                                <h4>25</h4>
+                                <p>Cities Covered</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help & Support Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>Help & Support</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="faq-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <div class="faq-item">
+                        <h4>How do I report an issue?</h4>
+                        <p>Simply fill out the report form with a clear title, description, and photo of the issue. Select the appropriate region and submit anonymously.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Is my report anonymous?</h4>
+                        <p>Yes, you can submit reports completely anonymously. We don't require personal information for basic reporting.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>How long does it take to resolve an issue?</h4>
+                        <p>Resolution times vary depending on the issue type and location. Most reports are acknowledged within 24-48 hours.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>What types of issues can I report?</h4>
+                        <p>You can report road accidents, damaged roads, streetlight outages, potholes, drainage issues, and other civic infrastructure problems.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>How do I track my report?</h4>
+                        <p>While reports are anonymous, you can check the Upload a Report section to see if similar issues have been reported and their status.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>Privacy Policy</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="policy-content">
+                    <h3>Data Collection</h3>
+                    <p>We collect minimal data necessary for providing our services. Anonymous reports don't require any personal information.</p>
+
+                    <h3>Data Usage</h3>
+                    <p>Your data is used solely for improving infrastructure services and connecting reports with relevant authorities.</p>
+
+                    <h3>Data Security</h3>
+                    <p>We implement industry-standard security measures to protect your information and maintain the anonymity of reports.</p>
+
+                    <h3>Contact Information</h3>
+                    <p>For privacy concerns, contact us at privacy@pocketinfrastructure.in</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>Terms of Service</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="policy-content">
+                    <h3>Acceptance of Terms</h3>
+                    <p>By using Pocket Infrastructure, you agree to these terms and conditions.</p>
+
+                    <h3>User Responsibilities</h3>
+                    <p>Users must provide accurate information and use the platform responsibly for reporting legitimate infrastructure issues.</p>
+
+                    <h3>Content Guidelines</h3>
+                    <p>All reports should be factual and relevant to infrastructure issues. Misuse of the platform may result in account suspension.</p>
+
+                    <h3>Limitation of Liability</h3>
+                    <p>Pocket Infrastructure is not liable for the accuracy of information provided by users or the timeliness of issue resolution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News & Updates Modal -->
+    <div id="news-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>Latest News & Updates</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="news-section">
+                    <div class="news-item featured">
+                        <div class="news-image">
+                            <img src="https://via.placeholder.com/400x250/1e40af/ffffff?text=Infrastructure+Development" alt="Infrastructure Development Project">
+                        </div>
+                        <div class="news-content">
+                            <h3>Road Repair Initiative Completed in Delhi</h3>
+                            <p class="news-date">January 10, 2026</p>
+                            <p>The Department of Infrastructure Development has successfully completed a major road repair initiative across Delhi. Over 500 potholes were fixed and 20km of roads were resurfaced in the past month.</p>
+                            <p>The project, which began in December 2025, addressed critical infrastructure issues reported through the Pocket Infrastructure platform. Citizens reported over 200 issues that were prioritized for immediate attention.</p>
+                        </div>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-image">
+                            <img src="https://via.placeholder.com/300x200/64748b/ffffff?text=Street+Lights+Upgraded" alt="Street Light Upgrades">
+                        </div>
+                        <div class="news-content">
+                            <h3>Smart Street Lighting System Launched</h3>
+                            <p class="news-date">January 5, 2026</p>
+                            <p>A new smart street lighting system has been implemented in residential areas. The system uses energy-efficient LED lights with automatic sensors that adjust brightness based on pedestrian activity.</p>
+                        </div>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-image">
+                            <img src="https://via.placeholder.com/300x200/1e40af/ffffff?text=Drainage+System" alt="Drainage Improvements">
+                        </div>
+                        <div class="news-content">
+                            <h3>Monsoon Drainage System Enhanced</h3>
+                            <p class="news-date">December 28, 2025</p>
+                            <p>Following multiple reports of waterlogging during the recent monsoon season, the drainage system in low-lying areas has been upgraded with larger capacity pipes and additional drainage outlets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Government Footer -->
+    <footer class="gov-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pocket Infrastructure</h3>
+                <p>Official Government Infrastructure Reporting Platform</p>
+                <p>Report infrastructure issues and help improve public services.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" onclick="openModal('about-modal')">About Us</a></li>
+                    <li><a href="#" onclick="openModal('news-modal')">News & Updates</a></li>
+                    <li><a href="#" onclick="openModal('contact-modal')">Contact</a></li>
+                    <li><a href="#" onclick="openModal('help-modal')">Help</a></li>
+                    <li><a href="#" onclick="openModal('privacy-modal')">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Information</h4>
+                <p><i class="fas fa-envelope"></i> support@pocketinfrastructure.in</p>
+                <p><i class="fas fa-phone"></i> +91 1800-XXX-XXXX</p>
+                <p><i class="fas fa-map-marker-alt"></i> New Delhi, India</p>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Pocket Infrastructure. All rights reserved. | Official Government Platform</p>
+            <p>This website is maintained by the Department of Infrastructure Development</p>
+            <p><strong>Website Development:</strong> Privately developed and maintained, officially authorized by the Government of India</p>
+        </div>
+    </footer>
 
 </body>
 </html>

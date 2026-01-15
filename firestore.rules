@@ -1,15 +1,61 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read of reports publicly
+    // Reports collection - public read, controlled write
     match /reports/{reportId} {
+      // Allow anyone to read reports
       allow read: if true;
-      // Allow create for anonymous uploads with validation
-      allow create: if request.resource.data.keys().hasAll(["title","description","region","createdAt"]) &&
-                  request.resource.data.title is string && request.resource.data.description is string &&
-                  request.resource.data.region is string && request.resource.data.createdAt is timestamp;
-      // No updates or deletes allowed from client
-      allow update, delete: if false;
+
+      // Allow create with proper validation
+      allow create: if validateReportData() &&
+                   request.resource.data.createdAt == request.time &&
+                   rateLimitCheck();
+
+      // Allow updates only through admin functions
+      allow update: if false;
+
+      // Allow deletes only through admin functions
+      allow delete: if false;
     }
+
+    // Admin collection - restricted access
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // Statistics collection - read-only for public
+    match /stats/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+
+  // Helper functions
+  function validateReportData() {
+    let data = request.resource.data;
+    return data.keys().hasAll(['title', 'description', 'createdAt']) &&
+           data.title is string &&
+           data.title.size() >= 5 &&
+           data.title.size() <= 100 &&
+           data.description is string &&
+           data.description.size() >= 10 &&
+           data.description.size() <= 1000 &&
+           (!data.keys().hasAny(['location']) || (data.location is string && data.location.size() <= 200)) &&
+           (!data.keys().hasAny(['category']) || data.category in ['road', 'traffic', 'infrastructure', 'safety', 'other']) &&
+           (!data.keys().hasAny(['latitude']) || (data.latitude is number && data.latitude >= -90 && data.latitude <= 90)) &&
+           (!data.keys().hasAny(['longitude']) || (data.longitude is number && data.longitude >= -180 && data.longitude <= 180)) &&
+           data.status == 'pending' &&
+           data.upvotes == 0 &&
+           data.anonymous is bool;
+  }
+
+  function rateLimitCheck() {
+    // Allow max 10 reports per hour per IP
+    return get(/databases/$(database)/documents/rate_limits/$(request.auth != null ? request.auth.uid : 'anonymous_' + request.auth.token.email)).data.requestsPerHour <= 10;
+  }
+
+  function isAdmin() {
+    // In production, check for admin claims or specific user IDs
+    return request.auth != null && request.auth.token.admin == true;
   }
 }

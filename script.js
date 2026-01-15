@@ -17,12 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check backend health and update UI
   async function checkBackend() {
     if (!backendStatusEl) return;
+    
+    // Hide by default
+    backendStatusEl.style.display = 'none';
+    
     try {
       const res = await fetch('/api/health', { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
         backendStatusEl.textContent = json.emulator ? 'Backend: Connected (emulator)' : 'Backend: Connected';
         backendStatusEl.classList.remove('warn', 'err'); backendStatusEl.classList.add('ok');
+        backendStatusEl.style.display = 'block'; // Show only when connected
         return true;
       }
     } catch (err) {
@@ -35,14 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (direct.ok) {
         backendStatusEl.textContent = 'Backend: Connected (direct functions emulator)';
         backendStatusEl.classList.remove('warn', 'err'); backendStatusEl.classList.add('ok');
+        backendStatusEl.style.display = 'block'; // Show only when connected
         return true;
       }
     } catch (err) {
       console.warn('Backend health check failed:', err);
     }
 
-    backendStatusEl.textContent = 'Backend: Not reachable — open via emulator hosting (http://localhost:5000) or start emulators';
-    backendStatusEl.classList.remove('ok'); backendStatusEl.classList.add('err');
+    // Don't show error message to users - just hide the status
+    backendStatusEl.style.display = 'none';
     return false;
   }
 

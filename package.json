@@ -1,8 +1,33 @@
 {
-  "name": "pocket-infrastructure-site",
-  "version": "0.1.0",
+  "name": "government-citizen-reporting-platform",
+  "version": "1.0.0",
+  "description": "A comprehensive web application for citizens to report issues to government authorities",
+  "main": "script.js",
   "scripts": {
     "build:public": "node ./scripts/copy-to-public.js",
-    "start:emulator": "firebase emulators:start --only functions,firestore,storage,hosting"
+    "start:emulator": "firebase emulators:start --only functions,firestore,storage,hosting",
+    "test": "mocha test/**/*.test.js",
+    "test:watch": "mocha --watch test/**/*.test.js",
+    "deploy": "npm run build:public && firebase deploy --only functions,firestore:rules,storage:rules,hosting",
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "government",
+    "citizen-reporting",
+    "firebase",
+    "responsive",
+    "pwa"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
